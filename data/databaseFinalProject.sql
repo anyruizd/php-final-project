@@ -28,23 +28,27 @@ CREATE TABLE IF NOT EXISTS score(
     FOREIGN KEY (registrationOrder) REFERENCES player(registrationOrder)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci; 
 
-DROP VIEW history;
 
-CREATE VIEW history AS
+CREATE OR REPLACE VIEW history AS
 SELECT s.scoreTime, p.id, p.fName, p.lName, s.result, s.livesUsed 
 FROM player p, score s
 WHERE p.registrationOrder = s.registrationOrder;
 
+CREATE OR REPLACE VIEW playerAuth AS
+SELECT p.userName AS userName, a.passCode AS passCode
+FROM player p, authenticator a
+WHERE p.registrationOrder = a.registrationOrder;
+
 -- Insert into the tables (including php variables)
 
-INSERT IGNORE INTO player(fName, lName, userName, registrationTime)
-VALUES($first_name, $last_name, $user_name, $current_dateTime);
+-- INSERT IGNORE INTO player(fName, lName, userName, registrationTime)
+-- VALUES($first_name, $last_name, $user_name, $current_dateTime);
 
-INSERT IGNORE INTO authenticator(passCode,registrationOrder)
-VALUES($pass_word, $user_rank);
+-- INSERT IGNORE INTO authenticator(passCode,registrationOrder)
+-- VALUES($pass_word, $user_rank);
 
-INSERT IGNORE INTO authenticator(passCode,registrationOrder)
-VALUES($pass_word, $user_rank);
+-- INSERT IGNORE INTO authenticator(passCode,registrationOrder)
+-- VALUES($pass_word, $user_rank);
 
 -- select from the view
 -- SELECT * FROM history;
@@ -56,7 +60,7 @@ INSERT IGNORE INTO player(fName, lName, userName, registrationTime)
 VALUES('Marie','Jourdain', 'asterix2023', now());
 INSERT IGNORE INTO player(fName, lName, userName, registrationTime)
 VALUES('Jonathan','David', 'pokemon527', now()); 
---------------------------------------------------
+-- ------------------------------------------------
 
 -- SAMPLE DATA TO TEST INSERT MANUALLY ------------------------
 INSERT IGNORE INTO authenticator(passCode, registrationOrder)

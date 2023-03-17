@@ -1,3 +1,27 @@
+<?php
+
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username']) && isset($_POST['password'])){
+
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // prepare the SQL statement
+    $sql = "SELECT * FROM player WHERE userName = '$username'";
+
+    // execute the SQL statement
+    $result = mysqli_query($conn, $sql);
+
+    // check if there is a matching user
+    if (mysqli_num_rows($result) > 0) {
+        $error = 'Username exists in table, try other';
+    } else {
+
+    }
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html>
 
@@ -18,7 +42,7 @@
                         Register
                     </div>
                     <div class="card-body">
-                        <form>
+                        <form action="" method="POST">
                             <div class="form-group">
                                 <label for="username">Username:</label>
                                 <input type="text" class="form-control" id="username" name="username" required>
@@ -43,6 +67,12 @@
                             <button type="submit" class="btn btn-primary" name="create">Create</button>
                             <button type="submit" class="btn btn-secondary" name="sign-in">Sign-In</button>
                         </form>
+
+                        <?php if($error){ ?>
+                            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                                <strong>Atention!</strong> <?= $error ?>
+                            </div>
+                        <?php } ?>
 
                     </div>
                 </div>
