@@ -1,6 +1,8 @@
 <?php
+
 if(isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] == '/')
-    header('Location: /login.php');
+    header('Location: /login');
+
 // Define database connection constants
 define('DB_HOST', 'db');
 define('DB_USER', 'FINAL_PROJ');
@@ -18,7 +20,7 @@ if ($mysqli->connect_errno) {
 
 // Use the $mysqli object to execute queries and interact with the database
 
-include('./pages/' . $_SERVER['REQUEST_URI']);
+include('./pages/' . $_SERVER['REQUEST_URI'] . '.php');
 
 // Close connection
 $mysqli->close();

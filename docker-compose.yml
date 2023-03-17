@@ -1,7 +1,10 @@
 version: "2"
 services:
     www:
-        build: .
+        # build: .
+        build: 
+            context: .
+            dockerfile: Dockerfile.apache-php
         ports: 
             - "80:80"
         volumes:
@@ -12,7 +15,10 @@ services:
         networks:
             - default
     db:
-        image: mysql
+        # image: mysql
+        build: 
+            context: .
+            dockerfile: Dockerfile.mysql
         ports: 
             - "3306:3306"
         environment:
@@ -35,12 +41,5 @@ services:
         environment:
             PMA_HOST: db
             MYSQL_ROOT_PASSWORD: R00tP@ssw0rd
-    load:
-        image: mysql
-        command: ["sh", "-c", "sleep 10s && mysql -h db -u FINAL_PROJ -pDBPassword@ FINAL_PROJ < /data/databaseFinalProject.sql"]
-        volumes:
-            - ./data:/data
-        depends_on:
-            - db
 volumes:
     persistent:

@@ -1,8 +1,10 @@
 -- Create the database
 -- CREATE DATABASE kidsGames; 
+CREATE DATABASE IF NOT EXISTS FINAL_PROJ; 
+USE FINAL_PROJ;
 
 -- Create the tables and view
-CREATE TABLE player( 
+CREATE TABLE IF NOT EXISTS player( 
     fName VARCHAR(50) NOT NULL, 
     lName VARCHAR(50) NOT NULL, 
     userName VARCHAR(20) NOT NULL UNIQUE,
@@ -12,19 +14,21 @@ CREATE TABLE player(
     PRIMARY KEY (registrationOrder)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci; 
 
-CREATE TABLE authenticator(   
+CREATE TABLE IF NOT EXISTS authenticator(   
     passCode VARCHAR(255) NOT NULL,
     registrationOrder INTEGER, 
     FOREIGN KEY (registrationOrder) REFERENCES player(registrationOrder)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci; 
 
-CREATE TABLE score( 
+CREATE TABLE IF NOT EXISTS score( 
     scoreTime DATETIME NOT NULL, 
     result ENUM('success', 'failure', 'incomplete'),
     livesUsed INTEGER NOT NULL,
     registrationOrder INTEGER, 
     FOREIGN KEY (registrationOrder) REFERENCES player(registrationOrder)
 )CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci; 
+
+DROP VIEW history;
 
 CREATE VIEW history AS
 SELECT s.scoreTime, p.id, p.fName, p.lName, s.result, s.livesUsed 
@@ -33,53 +37,50 @@ WHERE p.registrationOrder = s.registrationOrder;
 
 -- Insert into the tables (including php variables)
 
-INSERT INTO player(fName, lName, userName, registrationTime)
+INSERT IGNORE INTO player(fName, lName, userName, registrationTime)
 VALUES($first_name, $last_name, $user_name, $current_dateTime);
 
-INSERT INTO authenticator(passCode,registrationOrder)
+INSERT IGNORE INTO authenticator(passCode,registrationOrder)
 VALUES($pass_word, $user_rank);
 
-INSERT INTO authenticator(passCode,registrationOrder)
+INSERT IGNORE INTO authenticator(passCode,registrationOrder)
 VALUES($pass_word, $user_rank);
 
 -- select from the view
-SELECT * FROM history;
-
-
-
+-- SELECT * FROM history;
 
 -- SAMPLE DATA TO TEST INSERT MANUALLY ------------------------
-INSERT INTO player(fName, lName, userName, registrationTime)
+INSERT IGNORE INTO player(fName, lName, userName, registrationTime)
 VALUES('Patrick','Saint-Louis', 'sonic12345', now()); 
-INSERT INTO player(fName, lName, userName, registrationTime)
+INSERT IGNORE INTO player(fName, lName, userName, registrationTime)
 VALUES('Marie','Jourdain', 'asterix2023', now());
-INSERT INTO player(fName, lName, userName, registrationTime)
+INSERT IGNORE INTO player(fName, lName, userName, registrationTime)
 VALUES('Jonathan','David', 'pokemon527', now()); 
 --------------------------------------------------
 
 -- SAMPLE DATA TO TEST INSERT MANUALLY ------------------------
-INSERT INTO authenticator(passCode, registrationOrder)
+INSERT IGNORE INTO authenticator(passCode, registrationOrder)
 VALUES('$2y$10$fxMTc4KD4mZlj03wc4grTuVLssP0ZKxeqfcfvxVx2xnrrKF.CKsk.', 1);
 
-INSERT INTO authenticator(passCode, registrationOrder)
+INSERT IGNORE INTO authenticator(passCode, registrationOrder)
 VALUES('$2y$10$AH/612QosAUyKIy5s4lEBuGdNAhnw.PbHYfIuLNK2aHQXWRMIF6fi', 2);
 
-INSERT INTO authenticator(passCode, registrationOrder)
+INSERT IGNORE INTO authenticator(passCode, registrationOrder)
 VALUES('$2y$10$rSNEZ5wd8YyRRlNCmwfb2uUvkffrAMdmLkcm5s.b7WAgiGy8UoA1i', 3);
 -- --------------------------------------------------
 
 -- SAMPLE DATA TO TEST INSERT MANUALLY ------------------------
-INSERT INTO score(scoreTime, result , livesUsed, registrationOrder)
+INSERT IGNORE INTO score(scoreTime, result , livesUsed, registrationOrder)
 VALUES(now(), 'success', 4, 1);
 
-INSERT INTO score(scoreTime, result , livesUsed, registrationOrder)
+INSERT IGNORE INTO score(scoreTime, result , livesUsed, registrationOrder)
 VALUES(now(), 'failure', 6, 2);
 
-INSERT INTO score(scoreTime, result , livesUsed, registrationOrder)
+INSERT IGNORE INTO score(scoreTime, result , livesUsed, registrationOrder)
 VALUES(now(), 'incomplete', 5, 3);
 -- --------------------------------------------------
 
-SELECT * FROM history;
+-- SELECT * FROM history;
 
 /* Output
 scoreTime 	            id 	                    fName 	    lName 	        result 	    livesUsed 	
