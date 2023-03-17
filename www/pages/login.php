@@ -28,7 +28,7 @@
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <button type="submit" class="btn btn-primary" name="connect">Connect</button>
-                            <button type="submit" class="btn btn-secondary" name="sign-up">Sign-Up</button>
+                            <a class="btn btn-secondary" href="/registration.php">Register</a>
                         </form>
 
                     </div>

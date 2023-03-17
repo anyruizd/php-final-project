@@ -16,14 +16,14 @@ services:
         ports: 
             - "3306:3306"
         environment:
-            MYSQL_DATABASE: dw3
-            MYSQL_USER: dw3
-            MYSQL_PASSWORD: dw3
-            MYSQL_ROOT_PASSWORD: dw3
+            MYSQL_DATABASE: FINAL_PROJ
+            MYSQL_USER: FINAL_PROJ
+            MYSQL_PASSWORD: DBPassword@
+            MYSQL_ROOT_PASSWORD: R00tP@ssw0rd
+            MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
+        command: --default-authentication-plugin=mysql_native_password
         volumes:
-            - ./dump:/docker-entrypoint-initdb.d
             - persistent:/var/lib/mysql
-        command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--default-authentication-plugin=mysql_native_password']
         networks:
             - default
     phpmyadmin:
@@ -33,8 +33,14 @@ services:
         ports:
             - 8000:80
         environment:
-            MYSQL_USER: dw3
-            MYSQL_PASSWORD: dw3
-            MYSQL_ROOT_PASSWORD: dw3
+            PMA_HOST: db
+            MYSQL_ROOT_PASSWORD: R00tP@ssw0rd
+    load:
+        image: mysql
+        command: ["sh", "-c", "sleep 10s && mysql -h db -u FINAL_PROJ -pDBPassword@ FINAL_PROJ < /data/databaseFinalProject.sql"]
+        volumes:
+            - ./data:/data
+        depends_on:
+            - db
 volumes:
     persistent:
