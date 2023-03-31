@@ -22,9 +22,9 @@ services:
         ports: 
             - "3306:3306"
         environment:
-            MYSQL_DATABASE: FINAL_PROJ
-            MYSQL_USER: FINAL_PROJ
-            MYSQL_PASSWORD: DBPassword@
+            MYSQL_DATABASE: kidsgames
+            MYSQL_USER: dw3
+            MYSQL_PASSWORD: dw3
             MYSQL_ROOT_PASSWORD: R00tP@ssw0rd
             MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
         command: --default-authentication-plugin=mysql_native_password

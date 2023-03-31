@@ -1,36 +1,17 @@
 <?php
+    session_start();
+    unset($_SESSION['update_error']);
+    unset($_SESSION['update_success']);
+    unset($_SESSION['reg_error']);
+    unset($_SESSION['reg_success']);
 
-if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username']) && isset($_POST['password'])){
-
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    // prepare the SQL statement
-    $sql = "SELECT * FROM playerAuth WHERE userName = ? AND passCode = ?";
-    $stmt = mysqli_prepare($conn,$sql);
-    mysqli_stmt_bind_param($stmt, "ss", $username, $password);
-    mysqli_stmt_execute($stmt);
-
-    // execute the SQL statement
-    $result = mysqli_stmt_get_result($stmt);
-
-    // check if there is a matching user
-    if (mysqli_num_rows($result) > 0) {
-        // fetch the user data
-        $row = mysqli_fetch_assoc($result);
-
-        // verify the password
-        if (password_verify($password, $row['password'])) {
-            $_SESSION['username'] = $username; // set the session variable
-            header("Location: dashboard.php"); // redirect to the dashboard page
-        } else {
-            $error = 'Invalid username or password';
-        }
-    } else {
-        $error = 'Invalid username or password';
+    include('./components/components.php');
+    if (isset($_SESSION['username'])) {
+        header('Location: ../pages/level.php');
     }
-}
-
+    if (isset($_SESSION['login_error'])) {
+        $errorMessage = $_SESSION['login_error'];
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,18 +22,40 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username']) && isset($_
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .vh-100 {
+            height: 100vh;
+        }
+    </style>
 </head>
 
-<body>
-    <div class="container mt-5">
+<body class="vh-100 d-flex flex-column justify-content-between">
+    <header>
+        <?php
+            echo createHeader();
+            echo createNav();
+        ?>
+    </header>
+    <article class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
+                <?php
+                if ($errorMessage) {
+                    echo "<div class='alert alert-dismissible alert-danger fade show mt-3'>
+                                $errorMessage
+                                <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+                                    <span aria-hidden=\"true\">&times;</span>
+                                </button>
+                            </div>";
+                }
+                ?>
                 <div class="card">
                     <div class="card-header">
                         Login
                     </div>
+
                     <div class="card-body">
-                        <form action="" method="POST">
+                        <form method="POST" action='../helpers/auth.php'>
                             <div class="form-group">
                                 <label for="username">Username:</label>
                                 <input type="text" class="form-control" id="username" name="username" required>
@@ -60,63 +63,28 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username']) && isset($_
                             <div class="form-group">
                                 <label for="password">Password:</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
+                                <?php
+
+                                if ($errorMessage) {
+                                    // show forgot password link
+                                    echo "<a href='forgot-password.php' class='btn btn-link'>Forgotten? Please, change your password.</a>";
+                                }
+                                ?>
                             </div>
                             <button type="submit" class="btn btn-primary" name="connect">Connect</button>
-                            <a class="btn btn-secondary" href="/registration">Register</a>
+                            <a href="registration.php" class="btn btn-secondary" name="sign-up">Sign up</a>
                         </form>
-
-                        <?php if($error){ ?>
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            <strong>Atention!</strong> <?= $error ?>
-                            </div>
-                        <?php } ?>
-                        
-                        <script>
-                          var alertList = document.querySelectorAll('.alert');
-                          alertList.forEach(function (alert) {
-                            new bootstrap.Alert(alert)
-                          })
-                        </script>
-                        
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </article>
+    <?php echo createFooter(); ?>
     <!-- Include Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
-
-        const form = document.querySelector('form');
-        const username = form.querySelector('#username');
-        const password = form.querySelector('#password');
-
-        form.addEventListener('submit', (event) => {
-            // Check if username and password are correct
-            if (!checkCredentials(username.value, password.value)) {
-                alert('Sorry, you entered a wrong username or password!');
-                event.preventDefault();
-                return;
-            }
-
-            // Start session and redirect to first level game
-            startSession();
-            window.location.href = 'first-level-game.html';
-        });
-
-        function checkCredentials(username, password) {
-            // Check if username and password are correct
-            // Return true if credentials are correct, false otherwise
-        }
-
-        function startSession() {
-            // Start session
-        }
-
     </script>
 </body>
 

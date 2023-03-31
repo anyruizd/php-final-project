@@ -1,7 +1,7 @@
 -- Create the database
 -- CREATE DATABASE kidsGames; 
-CREATE DATABASE IF NOT EXISTS FINAL_PROJ; 
-USE FINAL_PROJ;
+CREATE DATABASE IF NOT EXISTS kidsgames; 
+USE kidsgames;
 
 -- Create the tables and view
 CREATE TABLE IF NOT EXISTS player( 
